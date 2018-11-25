@@ -1,7 +1,6 @@
 'use strict';
 
 const { QuestReward } = require('ranvier');
-const LevelUtil = require('../../bundle-example-lib/lib/LevelUtil');
 
 /**
  * Quest reward that gives experience
