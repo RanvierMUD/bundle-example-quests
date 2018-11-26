@@ -89,7 +89,7 @@ module.exports = class FetchGoal extends QuestGoal {
       return;
     }
 
-    for (const [uuid, item] of this.player.inventory) {
+    for (const [, item] of this.player.inventory) {
       this._getItem(item);
     }
   }
