@@ -1,9 +1,8 @@
 'use strict';
 
-const Ranvier = require('ranvier');
-const { Broadcast: B, CommandManager } = Ranvier;
-const { CommandParser } = Ranvier.CommandParser;
+const { Broadcast: B, CommandManager } = require('ranvier');
 const say = B.sayAt;
+const ArgParser = require('../../bundle-example-lib/lib/ArgParser');
 
 const subcommands = new CommandManager();
 subcommands.add({
@@ -14,7 +13,7 @@ subcommands.add({
     }
 
     const search = options[0];
-    const npc = CommandParser.parseDot(search, player.room.npcs);
+    const npc = ArgParser.parseDot(search, player.room.npcs);
     if (!npc) {
       return say(player, `No quest giver [${search}] found.`);
     }
@@ -55,7 +54,7 @@ subcommands.add({
     let [search, questIndex] = options;
     questIndex = parseInt(questIndex, 10);
 
-    const npc = CommandParser.parseDot(search, player.room.npcs);
+    const npc = ArgParser.parseDot(search, player.room.npcs);
     if (!npc) {
       return say(player, `No quest giver [${search}] found.`);
     }
