@@ -29,10 +29,10 @@ subcommands.add({
     }
 
     for (let i in availableQuests) {
-      let quest = availableQuests[i];
-      let qref = quest.entityReference;
+      let qref = availableQuests[i];
+      let quest = state.QuestFactory.get(qref);
       const displayIndex = parseInt(i, 10) + 1;
-      if (player.questTracker.canStart(quest)) {
+      if (state.QuestFactory.canStart(player, qref)) {
         say(player, `[<b><yellow>!</yellow></b>] - ${displayIndex}. ${quest.config.title}`);
       } else if (player.questTracker.isActive(qref)) {
         quest = player.questTracker.get(qref);
@@ -71,11 +71,12 @@ subcommands.add({
 
     const targetQuest = availableQuests[questIndex - 1];
 
-    if (player.questTracker.isActive(targetQuest.entityReference)) {
+    if (player.questTracker.isActive(targetQuest)) {
       return say(player, "You've already started that quest. Use 'quest log' to see your active quests.");
     }
 
-    player.questTracker.start(targetQuest);
+    const quest = state.QuestFactory.create(state, targetQuest, player);
+    player.questTracker.start(quest);
     player.save();
   }
 });
@@ -173,11 +174,7 @@ module.exports = {
 };
 
 function getAvailableQuests(state, player, npc) {
-  return npc.quests
-    .map(qid => state.QuestFactory.create(state, qid, player))
-    .filter(quest => {
-        const qref = quest.entityReference;
-        return player.questTracker.canStart(quest) || player.questTracker.isActive(qref);
-    })
-  ;
+  return npc.quests .filter(qref => {
+    return state.QuestFactory.canStart(player, qref) || player.questTracker.isActive(qref);
+  });
 }
